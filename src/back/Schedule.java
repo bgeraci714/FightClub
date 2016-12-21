@@ -1,4 +1,4 @@
-package src;
+package back;
 
 import java.io.*;
 import java.nio.*;
@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Set;
+import javax.swing.JOptionPane;
 
 // Battles are organized via a hashtable which is organized by month-year 
 // The values of the hashtable are linked lists that contain the actual Battle events
@@ -32,7 +33,7 @@ public class Schedule {
                 schedule.get(key).add(b);
             }    
             else {
-                System.out.println("We didn't add your event because of a conflict!\n");
+                Schedule.error("We didn't add your event because of a conflict!\n");
             }
             return availableTime;
         }
@@ -58,7 +59,7 @@ public class Schedule {
                 updatedBattle = true;
             }
             else {
-                System.out.println("We couldn't update your battle because of a time conflict.");
+                Schedule.error("We couldn't update your battle because of a time conflict.");
                 addToSchedule(b1);
             }
         }
@@ -72,6 +73,9 @@ public class Schedule {
     public boolean deleteFromSchedule(Battle b) {
         boolean deletedBattle = false;
         String key = b.getHashKey();
+        //System.out.println(b);
+        //System.out.println(schedule.get(key));
+        //System.out.print(schedule.get(key).contains(b));
         if (schedule.get(key).contains(b)) {
             schedule.get(key).remove(b);
             deletedBattle = true;
@@ -79,7 +83,6 @@ public class Schedule {
         if (schedule.get(key).isEmpty()) {
             schedule.remove(key);
         }
-        
         return deletedBattle;
     }
     
@@ -123,10 +126,10 @@ public class Schedule {
         if (schedule.containsKey(monthYearKey)) {
             list = schedule.get(monthYearKey);
         }
-        else 
-            System.out.println("We did not find the month-year key you were using.");
+        /*else 
+            Schedule.error("We did not find the month-year key you were using.");*/
         
-        return list;
+        return list; 
     } 
     
     // toString implementation primarily used for quick testing.
@@ -168,7 +171,7 @@ public class Schedule {
                 
             }
             catch (IOException e) {
-                System.out.println(e);
+                Schedule.error(e.getMessage());
             }
             
         } 
@@ -194,7 +197,7 @@ public class Schedule {
                     // legend: curInput == [p1, p2, bracket, timeInMillis]
                     curInput = line.split(sep);
 
-                    //System.out.println(curInput);
+                    //Schedule.error(curInput);
 
                     // get and format time
                     Calendar cal = Calendar.getInstance();
@@ -211,7 +214,7 @@ public class Schedule {
             }
             catch (IOException e) 
             {
-                System.out.println(e);
+                Schedule.error(e.getMessage());
                 return false;
             }
         }
@@ -267,11 +270,14 @@ public class Schedule {
             return true;
         }
         catch (IOException e) {
-            System.out.println(e);
+            Schedule.error(e.getMessage());
             return false;
         }
     }
     
-    
+    private static void error(String message)
+    {
+        JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
    
 }

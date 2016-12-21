@@ -1,4 +1,4 @@
-package src;
+package back;
  
 
 // GregorianCalendar(int year, int month, int dayOfMonth, int hourOfDay, int minute)
@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class Battle {
+public class Battle{
     // list of possible brackets for battles
     final String[] BRACKETS = {"UBER", "OU", "UU", "RU", "NU"};
     
@@ -50,21 +50,47 @@ public class Battle {
         return time.getTimeInMillis();
     }
     
+    public int getDay()
+    {
+        return time.get(Calendar.DAY_OF_MONTH);
+    }
+    
     // Likely unnecessary because we'll be displaying them in the GUI anyways
     @Override 
     public String toString () {
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
         SimpleDateFormat fmtTime = new SimpleDateFormat("HH:mm");
-        
-        fmt.setCalendar(time);
-        String dateFormattedFuck = fmt.format(time.getTime());
         String timeString = fmtTime.format(time.getTime());
         
-        String result = "";
+        String result;
+        result = this.getDay() +": "+ timeString+ ":: " +player1+" vs. " +player2+ " ["+bracket+"]";
         
-        result += player1 + " is battling " + player2 + " on " + dateFormattedFuck + " at " + timeString + " on the dot!\n";
-        result += "The Battle will be in the " + bracket + " bracket!\n";
         
         return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+        boolean equals = false;
+        Battle b2;
+        if( obj instanceof Battle )
+        {
+            b2 = (Battle) obj;
+            boolean sameDate = false;
+            if(this.time.compareTo(b2.time) == 0)
+                sameDate=true;
+            if(this.player1.equals(b2.player1) &&
+                    this.player2.equals(b2.player2) &&
+                    this.bracket.equals(b2.bracket) &&
+                    sameDate) {
+                    
+                    
+                equals = true;
+            }
+        }
+
+        
+
+        return equals;
     }
 }
